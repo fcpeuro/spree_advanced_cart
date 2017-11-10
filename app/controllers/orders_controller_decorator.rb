@@ -34,8 +34,7 @@ Spree::OrdersController.class_eval do
 
     respond_with do |format|
       format.html do
-        flash[:notice] = @esc_values.collect{|name, price| "#{name} #{price}" }.join("<br />").html_safe if @esc_values.present?
-        redirect_to cart_path
+        render partial: 'estimate_shipping_cost_table'
       end
       format.js do
         render :action => :estimate_shipping_cost
