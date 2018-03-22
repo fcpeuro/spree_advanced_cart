@@ -5,6 +5,8 @@ Spree::OrdersController.class_eval do
 
   def estimate_shipping_cost
     @order = current_order(create_order_if_necessary: false, lock: false)
+    (render_nothing and return) unless @order
+    
     # default attributes for stub address
     country_id = params[:country_id] || Spree::Config[:default_country_id]
     address_attrs = { :zipcode => params[:zipcode],
@@ -15,7 +17,7 @@ Spree::OrdersController.class_eval do
       state = state_id_by_zip(params[:zipcode])
       address_attrs.merge!(:state_id => state.try(:id))
     end
-
+    
     @order.ship_address = Spree::Address.new(address_attrs)
     package = Spree::Stock::Coordinator.new(@order).packages.first
     @shipping_rates = package ? package.shipping_rates : []
@@ -42,6 +44,10 @@ Spree::OrdersController.class_eval do
     end
   end
 
+  def render_nothing
+    render nothing: true
+  end
+  
   def state_id_by_zip(zip_code)
     Spree::State.find_by_abbr(ZipCodeInfo.instance.state_for(zip_code))
   end
