@@ -2,5 +2,5 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'spree', '~> 2.4'
+gem 'spree', '~> 4.3', '>= 4.3.0'
 gem 'sqlite3'
